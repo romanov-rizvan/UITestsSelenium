@@ -10,9 +10,10 @@ from selenium.webdriver.support import expected_conditions as ec
 class BaseTest(object):
 
     @pytest.fixture(scope="class", autouse=True)
-    def manage_driver(self, request, d):
+    def manage_driver(self, d):
         d.start()
-        request.addfinalizer(d.stop)
+        yield d
+        d.stop()
 
     @staticmethod
     def wait_present(driver, xpath, timeout=15.0):
@@ -33,10 +34,10 @@ class BaseTest(object):
     @staticmethod
     def click_on(driver, xpath, delay=0.5):
         try:
-            driver.find_element_by_xpath(xpath).click()
+            driver.find_element("xpath", xpath).click()
         except:
             time.sleep(delay)
-            driver.find_element_by_xpath(xpath).click()
+            driver.find_element("xpath", xpath).click()
 
     @staticmethod
     def refresh_page(driver):
@@ -48,8 +49,8 @@ class BaseTest(object):
 
     @staticmethod
     def get_web_element(driver, xpath):
-        return driver.instance.find_element_by_xpath(xpath)
+        return driver.instance.find_element("xpath", xpath)
 
     @staticmethod
     def get_web_elements(driver, xpath):
-        return driver.instance.find_elements_by_xpath(xpath)
+        return driver.instance.find_elements("xpath", xpath)
