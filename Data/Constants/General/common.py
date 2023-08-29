@@ -1,4 +1,6 @@
 import pytest
+import random
+import string
 import time
 
 from selenium.common.exceptions import TimeoutException
@@ -10,9 +12,10 @@ from selenium.webdriver.support import expected_conditions as ec
 class BaseTest(object):
 
     @pytest.fixture(scope="class", autouse=True)
-    def manage_driver(self, request, d):
+    def manage_driver(self, d):
         d.start()
-        request.addfinalizer(d.stop)
+        yield d
+        d.stop()
 
     @staticmethod
     def wait_present(driver, xpath, timeout=15.0):
@@ -33,10 +36,10 @@ class BaseTest(object):
     @staticmethod
     def click_on(driver, xpath, delay=0.5):
         try:
-            driver.find_element_by_xpath(xpath).click()
+            driver.find_element("xpath", xpath).click()
         except:
             time.sleep(delay)
-            driver.find_element_by_xpath(xpath).click()
+            driver.find_element("xpath", xpath).click()
 
     @staticmethod
     def refresh_page(driver):
@@ -48,8 +51,26 @@ class BaseTest(object):
 
     @staticmethod
     def get_web_element(driver, xpath):
-        return driver.instance.find_element_by_xpath(xpath)
+        return driver.instance.find_element("xpath", xpath)
 
     @staticmethod
     def get_web_elements(driver, xpath):
-        return driver.instance.find_elements_by_xpath(xpath)
+        return driver.instance.find_elements("xpath", xpath)
+
+    @staticmethod
+    def get_random_email(char_num):
+        return ''.join(random.choice(string.ascii_letters) for _ in range(char_num)) + "@email.com"
+
+    @staticmethod
+    def get_random_phone_number():
+        phone_num = [random.randint(2, 9)]
+        phone = ""
+        for i in range(1, 10):
+            phone_num.append(random.randint(0, 9))
+        for i in phone_num:
+            phone = phone + str(i)
+        return phone
+
+    @staticmethod
+    def get_phone_number_with_code_format(phone):
+        return "+1(" + phone[:3] + ")" + phone[3:6] + "-" + phone[6:]
