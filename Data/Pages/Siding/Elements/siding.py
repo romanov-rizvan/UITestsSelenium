@@ -22,7 +22,7 @@ class SidingElements:
     # step 2: Kind of siding
     kindOfSidingTitle = '//h4[text()="What kind of siding do you want?"]'
     # step 3: square
-    squareTitle = '//h4[text()="Approximately how many square feet will be covered with new siding?"]'
+    squareTitle = '//h4[contains(text(),"Approximately how many square feet will be covered with new")]'
     squareInput = '//input[@id="squareFeet"]'
     squareErrorMessage = '//div[@class="customInput__message" and text()="Please use numbers only"]'
     squareNotSureCheckbox = '//div[text()="Not sure"]//ancestor::div[@class=""]'
@@ -32,7 +32,7 @@ class SidingElements:
     storyWarningMessage = '//div[text()="Unfortunately our contractors don’t work on homes taller than ' \
                           'three stories. Would you like to continue?"]'
     # step 5: homeowner
-    homeownerTitle = '//h4[text()="Are you the homeowner or authorized to make property changes?]'
+    homeownerTitle = '//h4[text()="Are you the homeowner or authorized to make property changes?"]'
     homeownerYes = '//div[text()="Yes"]'
     homeownerNo = '//div[text()="No"]'
     homeownerWarningMessage = '//div[text()="Our contractors require the homeowner or someone authorized to make ' \
