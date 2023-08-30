@@ -2,7 +2,8 @@ class SidingElements:
     # zip code elements
     zipCodeBox = '//label[@for="zipCode"]'
     zipCodeInput = '//input[@id="zipCode"]'
-    zipCOdeErrorMessage = '//div[@class="zip--caption" and text()="Unknown ZIP Code"]'
+    zipCOdeErrorMessageInvalid = '//div[@class="zip--caption" and text()="Unknown ZIP Code"]'
+    zipCOdeErrorMessageEmpty = '//div[@class="zip--caption" and text()="Enter your ZIP Code"]'
     rightIconVisible = '//div[@class="rightIcon" and @style="visibility: visible;"]'
     getEstimateButton = '//span[text()="Get estimate"]//ancestor::button'
 
@@ -35,16 +36,17 @@ class SidingElements:
     homeownerTitle = '//h4[text()="Are you the homeowner or authorized to make property changes?"]'
     homeownerYes = '//div[text()="Yes"]'
     homeownerNo = '//div[text()="No"]'
-    homeownerWarningMessage = '//div[text()="Our contractors require the homeowner or someone authorized to make ' \
-                              'property changes be present during the estimate. Would you like to continue?"]'
+    homeownerWarningMessage = ('//div[contains(text(), "Our contractors require the homeowner or someone authorized '
+                               'to") and contains(text(), "make property changes be present during the estimate. '
+                               'Would you like to continue?")]')
     # step 6: name and email
     contactTitle = '//h4[text()="Who should I prepare this estimate for?"]'
     contactFullNameInput = '//input[@id="fullName"]'
     contactFullNameErrorMessageEmpty = '//div[@class="customInput__message" and text()="Enter your full name"]'
     contactFullNameErrorMessageInvalid = '//div[@class="customInput__message" and text()="Full name can consist only ' \
                                          'of latin letters and dashes"]'
-    contactFullNameErrorMessageNotFull = '//div[@class="customInput__message" and text()="Your full name should ' \
-                                         'contain both first and last name"]'
+    contactFullNameErrorMessageNotFull = ('//div[@class="customInput__message" and text()="Your full name '
+                                          'should contain both first and last name"]')
     contactEmailInput = '//input[@id="email"]'
     contactEmailErrorMessageEmpty = '//div[@class="customInput__message" and text()="Enter your email address"]'
     contactEmailErrorMessageInvalid = '//div[@class="customInput__message" and text()="Wrong email"]'
