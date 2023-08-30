@@ -1,8 +1,7 @@
-import random
-import string
 import time
 
 from Data.Constants.General.common import BaseTest
+from Data.Constants.General.config import Config
 from Data.Pages.Siding.Elements.Enums.kind_of_siding import KindOfSidingEnum
 from Data.Pages.Siding.Elements.Enums.stories import StoriesEnum
 from Data.Pages.Siding.Elements.Enums.type_of_project import TypeOfProjectEnum
@@ -11,9 +10,12 @@ from Data.Pages.Siding.Elements.siding import SidingElements
 
 class SidingSteps(BaseTest):
     elements = SidingElements()
-    random_phone = BaseTest.get_random_phone_number()
-    random_phone_with_code = BaseTest.get_phone_number_with_code_format(random_phone)
-    random_email = BaseTest.get_random_email(8)
+
+    def go_to_siding_page(self, driver):
+        if self.current_url(driver) != Config.url_host():
+            driver.instance.get(Config.url_host())
+        else:
+            self.refresh_page(driver)
 
     # zip code
     def zip_code_input_present(self, driver):
@@ -26,7 +28,16 @@ class SidingSteps(BaseTest):
 
     def enter_zip_code(self, driver, code="09090"):
         element = self.elements.zipCodeInput
+        driver.instance.find_element("xpath", element).clear()
         driver.instance.find_element("xpath", element).send_keys(code)
+
+    def zip_code_error_message_invalid(self, driver):
+        element = self.elements.zipCOdeErrorMessageInvalid
+        assert self.wait_present(driver.instance, element), "Zip Code invalid error message not found"
+
+    def zip_code_error_message_empty(self, driver):
+        element = self.elements.zipCOdeErrorMessageEmpty
+        assert self.wait_present(driver.instance, element), "Zip Code empty error message not found"
 
     def right_icon_is_visible(self, driver):
         element = self.elements.rightIconVisible
@@ -104,7 +115,8 @@ class SidingSteps(BaseTest):
     def step_elements_present(self, driver, enum):
         for enum_element in enum:
             element = enum_element.get_locator
-            assert self.wait_present(driver.instance, element), '"{}" button not found'.format(enum_element.get_value_name)
+            assert self.wait_present(driver.instance, element), '"{}" button not found'.format(enum_element.
+                                                                                               get_value_name)
 
     def step_button_present(self, driver, enum):
         element = enum.get_locator
@@ -147,8 +159,9 @@ class SidingSteps(BaseTest):
         element = self.elements.squareInput
         self.click_on(driver.instance, element)
 
-    def enter_square(self, driver, square="123"):
+    def enter_square(self, driver, square):
         element = self.elements.squareInput
+        driver.instance.find_element("xpath", element).clear()
         driver.instance.find_element("xpath", element).send_keys(square)
 
     def square_not_sure_checkbox_present(self, driver):
@@ -216,6 +229,7 @@ class SidingSteps(BaseTest):
     def enter_contact_full_name(self, driver, first_name="Test", last_name="User", is_full=True):
         element = self.elements.contactFullNameInput
         name = first_name + " " + last_name if is_full else first_name
+        driver.instance.find_element("xpath", element).clear()
         driver.instance.find_element("xpath", element).send_keys(name)
 
     def contact_full_name_error_message_empty_present(self, driver):
@@ -227,7 +241,7 @@ class SidingSteps(BaseTest):
         assert self.wait_present(driver.instance, element), 'Error message about invalid name not found'
 
     def contact_full_name_error_message_not_full_present(self, driver):
-        element = self.elements.contactFullNameErrorMessageInvalid
+        element = self.elements.contactFullNameErrorMessageNotFull
         assert self.wait_present(driver.instance, element), 'Error message about not full name not found'
 
     def contact_email_input_present(self, driver):
@@ -238,8 +252,9 @@ class SidingSteps(BaseTest):
         element = self.elements.contactEmailInput
         self.click_on(driver.instance, element)
 
-    def enter_contact_email(self, driver, email=random_email):
+    def enter_contact_email(self, driver, email="test@email.com"):
         element = self.elements.contactEmailInput
+        driver.instance.find_element("xpath", element).clear()
         driver.instance.find_element("xpath", element).send_keys(email)
 
     def contact_email_error_message_empty_present(self, driver):
@@ -263,13 +278,12 @@ class SidingSteps(BaseTest):
         element = self.elements.phoneInput
         self.click_on(driver.instance, element)
 
-    def enter_phone_number(self, driver, phone=random_phone):
+    def enter_phone_number(self, driver, phone):
         element = self.elements.phoneInput
         driver.instance.find_element("xpath", element).send_keys(phone)
 
-    def get_phone_number_and_check_it(self, driver, expected=random_phone_with_code):
+    def get_phone_number_and_check_it(self, driver, expected):
         time.sleep(0.5)
-
         element = self.elements.phoneInput
         actual = self.get_web_element(driver, element).get_attribute("value")
         assert actual == expected, "Actual phone number is not as expected"
@@ -309,6 +323,6 @@ class SidingSteps(BaseTest):
 
     # step 9: thank you
     def thank_title_present(self, driver, first_name="Test"):
+        time.sleep(1.4)
         element = self.elements.thankTitle.format(first_name)
-        assert self.wait_present(driver.instance, element), 'Thank you title not found'
-
+        assert self.wait_present(driver.instance, element, 5), 'Thank you title not found'
